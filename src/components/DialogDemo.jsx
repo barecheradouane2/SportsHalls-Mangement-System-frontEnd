@@ -12,12 +12,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
- function DialogDemo({btnName, btnIcon,title,children,description, handleSubmit}) {
+ function DialogDemo({btnName,ref, btnIcon,title,children,description, handleSubmit}) {
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline" className="cursor-pointer bg-[var(--secondcolor)] text-gray-50">{btnName} {btnIcon}</Button>
+          <Button   ref={ref} variant="outline" className="cursor-pointer bg-[var(--secondcolor)] text-gray-50">{btnName} {btnIcon}</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
