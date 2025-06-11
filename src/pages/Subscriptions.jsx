@@ -14,10 +14,6 @@ import { CircleSlash } from 'lucide-react';
 import { CircleAlert } from 'lucide-react';
 
 
-  
-
-
-
 function Subscriptions() {
   const [data,setData] = useState([]);
   const [outdatedata,setoutdatedata] = useState([]);
