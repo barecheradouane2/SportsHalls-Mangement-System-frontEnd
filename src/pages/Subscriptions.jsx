@@ -85,13 +85,13 @@ const dataoutdated = subscriptions.filter((item) => {
   const getoffers = async () => {
     try {
       if (activityoffer === null || activityoffer === "") {
-        alert("Please select an activity first.");
+        // alert("Please select an activity first.");
         return;
       }
       const response = await axios.get(
         `https://localhost:7259/api/Offers/get-all-offers?Search=${activityoffer}`
       );
-      alert("it loaded");
+      
       setOffers(response.data.data);
       // Handle the fetched offers data as needed
     } catch (error) {
