@@ -12,31 +12,31 @@ import Incomes from "./pages/Incomes";
 import Outcomes from "./pages/Outcomes";
 import Settings from "./pages/Settings";
 
-
+import { ProductSalesProvider } from "./Context/ProductSalesContext";
 
 // Import global styles
 
 function App() {
   return (
+    <ProductSalesProvider>
       <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index path="/" element={<Dashboard/>} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/activities" element={<Activities />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/attendance" element={<Attendance />} />
-          <Route path="/incomes" element={<Incomes />} />
-          <Route path="/outcomes" element={<Outcomes />} />
-          <Route path="/settings" element={<Settings/>} />
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index path="/" element={<Dashboard />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/members" element={<Members />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/attendance" element={<Attendance />} />
+            <Route path="/incomes" element={<Incomes />} />
+            <Route path="/outcomes" element={<Outcomes />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
 
-        </Route>
-
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-        
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Routes>
+      </BrowserRouter>
+    </ProductSalesProvider>
   );
 }
 
