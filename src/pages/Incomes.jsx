@@ -25,7 +25,7 @@ function Incomes() {
   const {
     register,
     setValue,
-    // reset,
+     reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -127,6 +127,21 @@ function Incomes() {
     }
   };
 
+   const setemptyvalues = () => {
+  reset({
+    id: 0,
+    revenueDate: "",
+    amount: "",
+    note: "",
+    membersID: "",
+
+  });
+  setisedit(false);
+};
+
+
+
+
   useEffect(() => {
     getRevenues();
     getMembers();
@@ -142,6 +157,7 @@ function Incomes() {
           setisedit={setisedit}
           title={isedit ? "Edit Incomes" : "Add Incomes"}
           handleSubmit={handleSubmit(onSubmit)}
+          handleCancel={() => setemptyvalues()}
         >
           <div className="grid gap-3 hidden">
             <Label htmlFor="id">id</Label>

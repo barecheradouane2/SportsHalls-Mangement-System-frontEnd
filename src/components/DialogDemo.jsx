@@ -12,12 +12,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
- function DialogDemo({btnName,ref, btnIcon,title,children,description, handleSubmit}) {
+ function DialogDemo({btnName,ref, btnIcon,title,children,description, handleSubmit,handleCancel}) {
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button   ref={ref} variant="outline" className="cursor-pointer bg-[var(--secondcolor)] text-gray-50">{btnName} {btnIcon}</Button>
+          <Button   ref={ref}    variant="outline" className="cursor-pointer bg-[var(--secondcolor)] text-gray-50">{btnName} {btnIcon}</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -35,7 +35,10 @@ import { Label } from "@/components/ui/label"
           </form>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline"
+                onClick={handleCancel} 
+              
+              >Cancel</Button>
             </DialogClose>
             <Button type="submit"
               

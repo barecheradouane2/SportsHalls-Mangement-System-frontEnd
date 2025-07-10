@@ -27,7 +27,7 @@ function Attendance() {
   const {
     register,
     setValue,
-    // reset,
+     reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -63,7 +63,7 @@ function Attendance() {
       const response = await axios.get(
         `https://localhost:7259/api/Activities/get-all`
       );
-      setActivities(response.data.data);
+      setActivities(response.data);
       // Handle the fetched activities data as needed
     } catch (error) {
       console.error(
@@ -85,6 +85,17 @@ function Attendance() {
     }
   };  
 
+  const setemptyvalues = () => {
+  reset({
+    id: 0,
+    attendanceDate: "",
+    activitiesID: "",
+    status: "",
+    membersID: "",
+
+  });
+  setisedit(false);
+};
 
 
 
@@ -146,6 +157,8 @@ function Attendance() {
              setisedit={setisedit}
              title={isedit ? "Edit Attendance" : "Add Attendance"}
           handleSubmit={handleSubmit(onSubmit)}
+          handleCancel={() => setemptyvalues()}
+          
         >
           <div className="grid gap-3 hidden">
             <Label htmlFor="id">id</Label>

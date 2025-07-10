@@ -10,8 +10,8 @@ function Activities() {
     axios
       .get("https://localhost:7259/api/Activities/get-all")
       .then((response) => {
-        setactivites(response.data.data);
-        console.log(response.data.data);
+        setactivites(response.data);
+        
       })
       .catch((error) => {
         console.error("There was an error!", error);

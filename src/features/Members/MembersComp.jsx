@@ -43,17 +43,18 @@ import { useRef } from "react";
 function MembersComp({
   Members,
   handledelete,
-  handleUpdate,
+   setisedit,
+   ref,
+   setValue,
+ 
   setPageNumber,
   pageNumber,
-  setSearch
+  setSearch,
 }) {
- 
-
   const MemberIDRef = useRef(null);
-const FullNameRef = useRef(null);
+  const FullNameRef = useRef(null);
 
-const [filterOpen, setFilterOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   // const {
 
@@ -98,29 +99,30 @@ const [filterOpen, setFilterOpen] = useState(false);
         </div>
 
         <div className="flex items-center gap-2">
-          <Refreshbtn  onClick={()=>{
-            setSearch("");
-            MemberIDRef.current.value = "";
-            FullNameRef.current.value = "";
-            setPageNumber(1);
+          <Refreshbtn
+            onClick={() => {
+              setSearch("");
+              MemberIDRef.current.value = "";
+              FullNameRef.current.value = "";
+              setPageNumber(1);
+            }}
+          />
 
-          }}/>
+          <Searchbtn
+            onClick={() => {
+              //  if(MemberIDRef.current.value!=""){
+              //    setSearch(MemberIDRef.current.value);
+              //  }else{
+              //         setSearch(FullNameRef.current.value)
+              //  }
 
-          <Searchbtn onClick={()=>{
-             
-            //  if(MemberIDRef.current.value!=""){
-            //    setSearch(MemberIDRef.current.value);
-            //  }else{
-            //         setSearch(FullNameRef.current.value)
-            //  }
+              setSearch(
+                FullNameRef.current.value + " " + MemberIDRef.current.value
+              );
+            }}
+          />
 
-           setSearch(FullNameRef.current.value+" "+ MemberIDRef.current.value)
-          
-          }} 
-            
-            />
-
-          <Funnelbtn  filterOpen={filterOpen} setFilterOpen={setFilterOpen}/>
+          <Funnelbtn filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
         </div>
       </SearchComp>
 
@@ -129,19 +131,17 @@ const [filterOpen, setFilterOpen] = useState(false);
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                 <button
+                <button
                   onClick={() => {
                     if (pageNumber <= 1) return;
-                    setPageNumber(prev => Number(prev) - 1);
-                   
+                    setPageNumber((prev) => Number(prev) - 1);
                   }}
                 >
-                <PaginationPrevious  />
+                  <PaginationPrevious />
                 </button>
               </PaginationItem>
               <PaginationItem>
-                
-                <PaginationLink >{pageNumber}</PaginationLink>
+                <PaginationLink>{pageNumber}</PaginationLink>
               </PaginationItem>
               <PaginationItem>
                 <PaginationEllipsis />
@@ -149,8 +149,7 @@ const [filterOpen, setFilterOpen] = useState(false);
               <PaginationItem>
                 <button
                   onClick={() => {
-                    setPageNumber(prev => Number(prev) + 1);
-                   
+                    setPageNumber((prev) => Number(prev) + 1);
                   }}
                 >
                   <PaginationNext />
@@ -198,7 +197,22 @@ const [filterOpen, setFilterOpen] = useState(false);
               <TableCell key={member.id} className=" flex items-center gap-2">
                 <Eye className="cursor-pointer" />
 
-                <EditMemberDialog member={member} handleUpdate={handleUpdate} />
+                <button
+                  onClick={() => {
+                    setValue("fullName", member.fullName);
+                    setValue("phoneNumber",member.phoneNumber);
+                    setValue("status",member.status);
+                     setValue("id", member.id);
+
+                    setisedit(true);
+
+                  
+
+                    ref.current.click();
+                  }}
+                >
+                  <SquarePen className="cursor-pointer" />
+                </button>
 
                 <DialogDemo
                   btnName={<Trash className="cursor-pointer" />}

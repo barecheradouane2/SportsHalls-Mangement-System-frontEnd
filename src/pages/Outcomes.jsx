@@ -24,7 +24,7 @@ function Outcomes() {
   const {
     register,
     setValue,
-    // reset,
+     reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -91,6 +91,20 @@ function Outcomes() {
     }
   };
 
+  const setemptyvalues = () => {
+  reset({
+    id: 0,
+    name: "",
+    date: "",
+    totalPrice: "",
+    note: "",
+    type: 0, // Default to "oneTime"
+  });
+  setisedit(false);
+};
+
+
+
   useEffect(() => {
     getExpenses();
   
@@ -106,6 +120,7 @@ function Outcomes() {
           setisedit={setisedit}
           title={isedit ? "Edit outcome" : "Add outcome"}
           handleSubmit={handleSubmit(onSubmit)}
+          handleCancel={()=>setemptyvalues()} // Reset form values on cancel
         >
           <div className="grid gap-3 hidden">
             <Label htmlFor="id">id</Label>

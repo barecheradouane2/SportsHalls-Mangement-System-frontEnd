@@ -81,7 +81,7 @@ function Products() {
   const {
     register,
     setValue,
-    // reset,
+     reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -196,6 +196,24 @@ function Products() {
     
    }
 
+    const setemptyvalues = () => {
+  reset({
+    id: 0,
+    Name: "",
+    NewPrice: "",
+    OldPrice: "",
+    BaseQty: "",
+    unit:"",
+    StockQty: "",
+    Note: "",
+    photos: null, // Reset the file input
+
+
+     
+  });
+  setisedit(false);
+};
+
    
 
 
@@ -215,6 +233,10 @@ function Products() {
           setisedit={setisedit}
           title={isedit ? "Edit Product" : "Add Product"}
           handleSubmit={handleSubmit(onSubmit)}
+
+          handleCancel={()=>setemptyvalues()}
+
+
         >
           <div className="grid gap-3 hidden">
             <Label htmlFor="id">id</Label>

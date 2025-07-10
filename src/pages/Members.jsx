@@ -6,36 +6,52 @@ import { Label } from "@/components/ui/label"; // Make sure path is correct
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-  import { ToastContainer, toast } from 'react-toastify';
-  import { useEffect, useState } from "react";
-
-
+import { ToastContainer, toast } from "react-toastify";
+import { useEffect, useState, useRef } from "react";
 
 // Make sure path is correct
 
 function Members() {
+  const [Members, setMembers] = useState([]);
+  const [pageSize, setPageSize] = useState(5);
+  const [sort, setSort] = useState("");
+  const [search, setSearch] = useState("");
+  const [isedit, setisedit] = useState(false);
 
-    const [Members, setMembers] = useState([]);
-         const [pageSize, setPageSize] = useState(5);
-        const [sort, setSort] = useState("");
-      const [search, setSearch] = useState("");
-  
-     const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const {
     register,
     reset,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  
+  const addeditref = useRef(null);
 
-   const onSubmit = async (data) => {
+const setemptyvalues = () => {
+  reset({
+    id: 0,
+    fullName: "",
+    phoneNumber: "",
+    status: "",
+  });
+  setisedit(false);
+};
+
+
+
+  const onSubmit = async (data) => {
     try {
-      const response = await axios.post("https://localhost:7259/api/Members/add-Member", data); // change URL
+
+      setemptyvalues();
+      const response = await axios.post(
+        "https://localhost:7259/api/Members/add-Member",
+        data
+      ); // change URL
       console.log("Success:", response.data.message);
       toast.success("Member added successfully!");
-     await getMembers(); // Refresh the members list after adding a new member
+      await getMembers(); // Refresh the members list after adding a new member
       reset(); // Optional: reset the form after success
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
@@ -45,7 +61,9 @@ function Members() {
 
   const handledelete = async (id) => {
     try {
-      const response = await axios.delete(`https://localhost:7259/api/Members/delete-Member/${id}`);
+      const response = await axios.delete(
+        `https://localhost:7259/api/Members/delete-Member/${id}`
+      );
       console.log("Success:", response.data.message);
       toast.success("Member deleted successfully!");
       await getMembers(); // Refresh the members list after deletion
@@ -55,12 +73,13 @@ function Members() {
     }
   };
   const handleUpdate = async (id, data) => {
-    
-
     try {
-      const response = await axios.put(`https://localhost:7259/api/Members/update-Member`, data);
+      const response = await axios.put(
+        `https://localhost:7259/api/Members/update-Member`,
+        data
+      );
       console.log("Success:", response.data.message);
-    
+
       toast.success("Member updated successfully!");
       await getMembers(); // Refresh the members list after updating
     } catch (error) {
@@ -69,36 +88,65 @@ function Members() {
     }
   };
 
-
-
-
   const getMembers = async () => {
     try {
-      const response = await axios.get(`https://localhost:7259/api/Members/get-all-Members?Sort=${sort}&Search=${search}&PageSize=${pageSize}&PageNumber=${pageNumber}`);
-     
-            setMembers(response.data.data);
+      const response = await axios.get(
+        `https://localhost:7259/api/Members/get-all-Members?Sort=${sort}&Search=${search}&PageSize=${pageSize}&PageNumber=${pageNumber}`
+      );
+
+      setMembers(response.data.data);
       // Handle the fetched members data as needed
     } catch (error) {
-      console.error("Error fetching members:", error.response?.data || error.message);
+      console.error(
+        "Error fetching members:",
+        error.response?.data || error.message
+      );
     }
-  }
+  };
   useEffect(() => {
     getMembers();
-  }, [pageNumber,search]);
-
+  }, [pageNumber, search]);
 
   return (
     <>
       <PageTitle title="Members">
-        <DialogDemo btnName="Adding" btnIcon="+" title="Adding new member" handleSubmit={handleSubmit(onSubmit)}>
+        
+        <DialogDemo
+          btnName="Adding"
+          btnIcon="+"
+          ref={addeditref}
+          title={isedit ? "Edit Member" : "Add Member"}
+          handleSubmit={handleSubmit(onSubmit)}
+
+          handleCancel={()=>setemptyvalues()}
+
+         
+        >
+           <div className="grid gap-3 hidden">
+            <Label htmlFor="id">id</Label>
+            <Input
+              id="id"
+              name="id"
+              type={"number"}
+              {...register("id", { required: "id is required" })}
+              defaultValue={0}
+              // Set default to today
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
           <div className="grid gap-3">
             <Label htmlFor="fullName">FullName</Label>
-            <Input id="fullName" name="fullName"
-            
+            <Input
+              id="fullName"
+              name="fullName"
               {...register("fullName", { required: "Full name is required" })}
-            
-            defaultValue="ahmed khiro" />
-            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+              defaultValue="ahmed khiro"
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
           </div>
           <div className="grid gap-3">
             <Label htmlFor="phoneNumber">Phone Number</Label>
@@ -115,7 +163,9 @@ function Members() {
               defaultValue="0658139571"
             />
             {errors.phoneNumber && (
-              <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.phoneNumber.message}
+              </p>
             )}
           </div>
 
@@ -140,24 +190,27 @@ function Members() {
       <div className="bg-white">
         <TabsContent
           tabs={["Search Members"]}
-          tabscontent={[<MembersComp key="members-comp" Members={Members}
-            handledelete={handledelete}
-
-            handleUpdate={handleUpdate}
-
-            setPageSize={setPageSize}
-            pageSize={pageSize}
-            setSort={setSort}
-            setSearch={setSearch}
-            setPageNumber={setPageNumber}
-            
-            pageNumber={pageNumber}
-            
-            />]}
+          tabscontent={[
+            <MembersComp
+              key="members-comp"
+              Members={Members}
+              handledelete={handledelete}
+              handleUpdate={handleUpdate}
+              setisedit={setisedit}
+              ref={addeditref}
+              setValue={setValue}
+              setPageSize={setPageSize}
+              pageSize={pageSize}
+              setSort={setSort}
+              setSearch={setSearch}
+              setPageNumber={setPageNumber}
+              pageNumber={pageNumber}
+            />,
+          ]}
         />
       </div>
 
-       <ToastContainer />
+      <ToastContainer />
     </>
   );
 }

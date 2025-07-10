@@ -72,7 +72,7 @@ const dataoutdated = subscriptions.filter((item) => {
       const response = await axios.get(
         `https://localhost:7259/api/Activities/get-all`
       );
-      setActivities(response.data.data);
+      setActivities(response.data);
       // Handle the fetched activities data as needed
     } catch (error) {
       console.error(
@@ -135,10 +135,26 @@ const dataoutdated = subscriptions.filter((item) => {
   const {
     register,
     setValue,
-    // reset,
+   reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+    const setemptyvalues = () => {
+  reset({
+    id: 0,
+    startDate: "",
+    ActivityName: "",
+    offersID: "",
+    amount: "",
+    membersID: "",
+
+
+  });
+  setisedit(false);
+};
+
+
 
   const onSubmit = async (data) => {
     try {
@@ -221,6 +237,7 @@ const dataoutdated = subscriptions.filter((item) => {
           setisedit={setisedit}
           title={isedit ? "Edit Subscription" : "Add Subscription"}
           handleSubmit={handleSubmit(onSubmit)}
+          handleCancel={() => setemptyvalues()}
         >
           <div className="grid gap-3 hidden">
             <Label htmlFor="id">id</Label>
