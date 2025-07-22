@@ -13,17 +13,20 @@ import { Input } from "@/components/ui/input";
 function Settings() {
   const [Activitesdata, setActivitesdata] = useState([]);
   const [Offersdata, setOffersdata] = useState([]);
+  const [Usersdata, setUsersdata] = useState([]);
 
   const [existingPhoto, setExistingPhoto] = useState(null);
 
   const activityref = useRef(null);
    const offersref = useRef(null);
+   const usersref = useRef(null);
 
   // const existingPhotoRef = useRef(null);
   // const offersref = useRef(null);
 
   const [isedit, setisedit] = useState(false);
   const [isOfferEdit, setIsOfferEdit] = useState(false);
+  const [isUserEdit, setIsUserEdit] = useState(false);
 
   const fetchActivities = async () => {
     try {
@@ -46,6 +49,18 @@ function Settings() {
       console.error("Error fetching offers:", error);
     }
   };
+  const fetchUsers = async () => {
+     try {
+      const response = await axios.get(
+        `https://localhost:7259/api/Account/get-all-users`
+      );
+      setUsersdata(response.data);
+    } catch (error) {
+      console.error("Error fetching users data:", error);
+    }
+
+  }
+
 
   const AddActivities = async (data) => {
     try {
@@ -72,6 +87,23 @@ function Settings() {
     }
   };
 
+  const AddUser = async (data) => {
+    try{
+      const response = await axios.post(
+        "https://localhost:7259/api/Account/register",
+        data
+      );
+        toast.success("Success:", response.data.message);
+     await fetchUsers(); // Refresh the users list
+
+    }catch(error){
+      console.error("Error adding user:", error);
+    }
+
+
+  }
+   
+
   const handleDeleteActivity = async (id) => {
     try {
       await axios.delete(
@@ -93,13 +125,28 @@ function Settings() {
     }
   };
 
+  const handleDeleteUser = async (id) => {
+    try {
+     var response = await axios.delete(
+        `https://localhost:7259/api/Account/delete-user/${id}`
+      );
+        toast.success("Success:", response.data.message);
+      await fetchUsers(); // Refresh the users list
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  }
+
   useEffect(() => {
-    fetchActivities();
-    fetchOffers();
-  }, [Activitesdata, Offersdata]);
+     fetchActivities();
+     fetchOffers();
+     fetchUsers();
+  }, [Activitesdata, Offersdata, Usersdata]);
 
   const Activitytitle = ["name", "description"];
   const Offerstitle = ["name", "durationDays", "price", "activitiesName"];
+  const Userstitle = ["displayName", "userName", "email"];
+
 
   const {
     register,
@@ -115,6 +162,13 @@ function Settings() {
   handleSubmit: handleSubmitOffer,
   formState: { errors: errorsOffer }
 } = useForm();
+
+
+const {  register: registerUser,
+  handleSubmit: handleSubmitUser,
+  formState: { errors: errorsUser }
+} = useForm();
+
 
   const onSubmitActivity = async (data) => {
     try {
@@ -209,6 +263,46 @@ function Settings() {
       toast.error("Error: " + (error.response?.data || error.message));
     }
   }
+  const onSubmitUser = async (data) => {
+
+      try {
+      const loaddata = {
+        userName: data.userName,
+        displayName: data.displayName,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+      };
+      var response = "";
+      if (data.id == 0) {
+        response = await axios.post(
+          "https://localhost:7259/api/Account/register",
+          loaddata
+        );
+      } else {
+        var updatedata = {
+          ...data,
+          id: data.id, // optional if you're just keeping the same id
+        };
+
+        response = await axios.put(
+          "https://localhost:7259/api/Account/update-user",
+          updatedata
+        );
+      }
+
+      toast.success("Success:", response.data.message);
+     // Refresh the subscriptions list after adding a new subscription
+      // Optional: reset the form after success
+    } catch (error) {
+      toast.error("Error:", error.response?.data || error.message);
+    }
+
+
+
+
+
+  }
 
   const setActivityValue = (activity) => {
     setValue("id", activity.id);
@@ -238,6 +332,22 @@ function Settings() {
     setIsOfferEdit(true);
     offersref.current.click();
   };
+  const setUserValue = (user) => {
+    setValue("id", user.id);
+    setValue("userName", user.userName);
+    setValue("displayName", user.displayName);
+    setValue("email", user.email);
+    setValue("role", user.role);
+    setIsUserEdit(true);
+    usersref.current.click();
+
+  };
+
+
+
+
+
+
 
   if (!Activitesdata || Activitesdata.length === 0) {
     return <div>Loading activities...</div>;
@@ -443,6 +553,132 @@ function Settings() {
             </div>
           </DialogDemo>
         </DropComponent>
+
+        <DropComponent
+          data={Usersdata}
+          title="Users"
+          datatitle={Userstitle}
+          handledelete={handleDeleteUser}
+          setvaluefunc={setUserValue}
+
+          // handleDeleteActivity={handleDeleteActivity}
+          // handleDeleteOffer={handleDeleteOffer}
+        >
+          <DialogDemo
+            key={3}
+              ref={usersref}
+              btnName="Adding"
+              btnIcon="+"
+              setisedit={setIsUserEdit}
+              title={isUserEdit ? "Edit User " : "Add User"}
+              handleSubmit={handleSubmitUser(onSubmitUser)}
+          >
+         
+         <div className="grid gap-3 hidden">
+            <Label htmlFor="id">id</Label>
+            <Input
+              id="id"
+              name="id"
+              type={"number"}
+              {...registerUser("id", { required: "id is required" })}
+              defaultValue={0}
+              // Set default to today
+            />
+            {errorsUser.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="userName">userName</Label>
+            <Input
+              id="userName"
+              name="userName"
+              type={"text"}
+              {...registerUser("userName", { required: "userName is required" })}
+              placeholder="Enter userName"
+            />
+            {errorsUser.userName && (
+              <p className="text-sm text-red-500">{errorsUser.userName.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="displayName">displayName</Label>
+            <Input
+              id="displayName"
+              name="displayName"
+              type={"text"}
+              {...registerUser("displayName", {
+                required: "displayName is required",
+              })}
+              placeholder="Enter displayName"
+            />
+            {errorsUser.displayName && (
+              <p className="text-sm text-red-500">{errorsUser.displayName.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="email">email</Label>
+            <Input
+              id="email"
+              name="email"
+              type={"email"}
+              {...registerUser("email", { required: "email is required" })}
+              placeholder="Enter email"
+            />
+            {errorsUser.email && (
+              <p className="text-sm text-red-500">{errorsUser.email.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="password">password</Label>
+            <Input
+              id="password"
+              name="password"
+              type={"password"}
+              {...registerUser("password", { required: "password is required" })}
+              placeholder="Enter password"
+            />
+            {errorsUser.password && (
+              <p className="text-sm text-red-500">{errorsUser.password.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="role">Role</Label>
+
+            <select
+              id="role"
+              {...registerUser("role", {
+                required: "role is required",
+              })}
+              className="border p-2 rounded w-full"
+            >
+              <option value=""> role</option>
+
+              <option key={1} value="Admin">
+                {"Admin"}
+              </option>
+
+              <option key={0} value="User">
+                {"User"}
+              </option>
+
+              <option key={0} value="Coach">
+                {"Coach"}
+              </option>
+            </select>
+            {errorsUser.role && (
+              <p className="text-red-500 text-sm">{errorsUser.role.message}</p>
+            )}
+          </div>
+        </DialogDemo>
+
+         </DropComponent>
+
       </div>
 
       <ToastContainer />

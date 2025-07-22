@@ -13,6 +13,7 @@ import Incomes from "./pages/Incomes";
 import Outcomes from "./pages/Outcomes";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+// import Users from "./pages/Users";
 
 import RequireAuth from "./components/RequireAuth";
 import { ProductSalesProvider } from "./Context/ProductSalesContext";
@@ -45,6 +46,9 @@ function App() {
             <Route path="/incomes" element={<Incomes />} />
             <Route path="/outcomes" element={<Outcomes />} />
             <Route path="/settings" element={<Settings />} />
+            {/* <Route path="/users" element={<Users />} /> */}
+
+
           </Route>
 
           {/* Fallback */}

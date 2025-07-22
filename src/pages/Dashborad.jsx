@@ -93,7 +93,9 @@ function Dashborad() {
       const response = await axios.get(
         `https://localhost:7259/api/Activities/get-all`
       );
+     
       const activities = response.data;
+      
 
       // Only update state once with all names
       const activityNames = activities.map((activity) => activity.name);

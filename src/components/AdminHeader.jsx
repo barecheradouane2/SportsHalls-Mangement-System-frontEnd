@@ -7,15 +7,58 @@ import { Bell } from "lucide-react";
 
 import { useState } from "react";
 
+import { LogOut } from "lucide-react";
+
+import { Globe } from 'lucide-react';
+
+
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+import { useAuth } from "@/Context/AuthContext";
+import axios from "axios";
+
+
 function AdminHeader() {
   const [showMenu, setShowMenu] = useState(false);
 
+  const login=useAuth();
+
+  const handleLogout = () => {
+    axios
+      .post("https://localhost:7259/api/Auth/logout")
+      .then((response) => {
+        // Handle successful logout
+        console.log(response.message);
+        // Optionally, redirect to login page or update state
+      })
+      .catch((error) => {
+        console.error("There was an error logging out!", error);
+      });
+  }
+
+ 
+
+
   return (
     <div className="flex  relative   justify-between items-center p-4 shadow-lg bg-white">
-      
       <div>
-      <h5 className="text-base font-semibold text-small-100">Welcome</h5>
-        <h2 className="text-2xl font-bold"> Mr <span className="text-2xl font-bold   text-third-100">Radouane Dev</span></h2>
+        <h5 className="text-base font-semibold text-small-100">Welcome</h5>
+        <h2 className="text-2xl font-bold">
+          {" "}
+          Mr{" "}
+          <span className="text-2xl font-bold   text-third-100">
+            {login?.user?.userName ?? "Guest"}
+
+          </span>
+        </h2>
       </div>
 
       <div className=" flex justify-end items-center ">
@@ -35,6 +78,37 @@ function AdminHeader() {
           {" "}
           <Bell />
         </div>
+        <div className=" cursor-pointer">
+          <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>
+                <Globe />
+              </NavigationMenuTrigger>
+           <NavigationMenuContent className="absolute left-0">
+            <ul className="grid   w-[100px] gap-4">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link href="#">English</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild>
+                  <Link href="#">Frensh</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild>
+                  <Link href="#">Arabic</Link>
+                </NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+
+
+
+        </div>
+
 
         <div className="sm:hidden mx-4 cursor-pointer  ">
           <AlignJustify onClick={() => setShowMenu(!showMenu)} />
@@ -56,11 +130,38 @@ function AdminHeader() {
         </div>
 
         <span className="w-0.5  mx-4  h-10 bg-black">.</span>
-        <img
+        {/* <img
           className=" cursor-pointer inline-block size-8 rounded-full ring-2 ring-white"
           src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
           alt=""
-        />
+        /> */}
+
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger><img
+          className=" cursor-pointer inline-block size-8 rounded-full ring-2 ring-white"
+          src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          alt=""
+        /></NavigationMenuTrigger>
+           <NavigationMenuContent className="absolute left-0">
+            <ul className="grid   w-[100px] gap-4">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link href="#">Profile</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild>
+                  <Link href="#">Settings</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild>
+                  <Link href="#" onClick={() => handleLogout()}>Sign out</Link>
+                </NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
     </div>
   );
