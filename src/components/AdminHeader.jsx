@@ -24,10 +24,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useAuth } from "@/Context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 
 function AdminHeader() {
   const [showMenu, setShowMenu] = useState(false);
+   const navigate = useNavigate();
 
   const login=useAuth();
 
@@ -35,9 +38,11 @@ function AdminHeader() {
     axios
       .post("https://localhost:7259/api/Auth/logout")
       .then((response) => {
-        // Handle successful logout
-        console.log(response.message);
-        // Optionally, redirect to login page or update state
+         console.log("Logout successful:", response.messsage);
+       navigate("/login");
+       
+        // Optionally, you can clear any user data from your context or state here
+        // For example: setUser(null);
       })
       .catch((error) => {
         console.error("There was an error logging out!", error);
