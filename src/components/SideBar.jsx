@@ -12,7 +12,7 @@ const Sidebar = () => {
     "
     >
       <div className="flex items-center gap-4  py-2 px-4">
-        <h2 className="text-xl font-bold text-black">RadSport</h2>
+        <h2 className="text-xl font-bold text-black">BRadSport</h2>
       </div>
 
       <div className="flex flex-col gap-8">

@@ -113,8 +113,9 @@ function CurrentSubscriptions({
           <Funnelbtn filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
         </div>
       </SearchComp>
+      <div className="overflow-x-auto">
 
-      <Table className="border-1 border-gray-200">
+      <Table className=" min-w-full border-1 border-gray-200 ">
         <TableCaption>
           <Pagination>
             <PaginationContent>
@@ -266,6 +267,9 @@ function CurrentSubscriptions({
           ))}
         </TableBody>
       </Table>
+      
+
+      </div>
     </div>
   );
 }

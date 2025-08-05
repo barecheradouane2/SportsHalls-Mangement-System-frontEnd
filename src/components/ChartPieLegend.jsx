@@ -23,6 +23,12 @@ const chartConfig = {
 };
 
 export function ChartPieLegend({ statitics }) {
+  // if (!statitics || statitics.length === 0) {
+  //   return <div>No data to display</div>;
+  // }
+
+  // if (loading) return <div>Loading chart...</div>;
+
   if (!statitics || statitics.length === 0) {
     return <div>No data to display</div>;
   }

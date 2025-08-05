@@ -34,7 +34,9 @@ function Dashborad() {
     { label: "This Month", value: "month" },
     { label: "This Year", value: "year" },
     { label: "Other", value: "other" },
+
   ];
+  // const [loading, setLoading] = useState(true);
 
   console.log("search", setSearch);
   console.log("search", setPageNumber);
@@ -108,25 +110,26 @@ function Dashborad() {
     }
   };
 
-  const getsubDatabyActivityName = async (activityname) => {
-    try {
-      const response = await axios.get(
-        `https://localhost:7259/api/Subscriptions/getall-subsctipton?Search=${activityname}`
-      );
+  // const getsubDatabyActivityName = async (activityname) => {
+  //   try {
+     
+  //     const response = await axios.get(
+  //       `https://localhost:7259/api/Subscriptions/getall-subsctipton?Search=${activityname}`
+  //     );
 
-      const subscriptionsstats = response.data.totalCount;
+  //     const subscriptionsstats = response.data.totalCount;
 
-      setSubscriptionData((prev) => [
-        ...prev,
-        { name: activityname, count: subscriptionsstats },
-      ]);
-    } catch (error) {
-      console.error(
-        "Error fetching subscriptions by activity name:",
-        error.response?.data || error.message
-      );
-    }
-  };
+  //     setSubscriptionData((prev) => [
+  //       ...prev,
+  //       { name: activityname, count: subscriptionsstats },
+  //     ]);
+  //   } catch (error) {
+  //     console.error(
+  //       "Error fetching subscriptions by activity name:",
+  //       error.response?.data || error.message
+  //     );
+  //   }
+  // };
 
   const getsubstatisticsbymonth = async () => {
 
@@ -145,6 +148,39 @@ function Dashborad() {
   
 
   }
+
+  // const oldactivitydata=["gym", "Swimming", "Yoga"]
+
+
+  const fetchAllData = async () => {
+  try {
+    const results = await Promise.all(
+      activitydata.map(async (name) => {
+        try {
+          const response = await axios.get(
+            
+
+            `https://localhost:7259/api/Subscriptions/getall-subsctipton?Search=${name}`
+          );
+          
+          return {
+            name,
+            count: response.data.totalCount,
+          };
+        } catch (err) {
+          console.error(`Failed to fetch for ${name}:`, err.message);
+          return { name, count: 0 }; // Fallback to zero
+        }
+      })
+    );
+
+    console.log("Final subscription results:", results);
+    setSubscriptionData(results);
+  } catch (error) {
+    console.error("Error in fetchAllData:", error.message);
+  }
+};
+
 
    
     
@@ -174,17 +210,28 @@ function Dashborad() {
     getTotalRevenue();
     getTotalExpense();
     getActivityData();
+    
+   
     getsubstatisticsbymonth()
-  }, [subcriptionstats,filter, pageNumber, search]);
+  }, [filter, pageNumber, search]);
 
-  useEffect(() => {
-    if (activitydata.length > 0) {
-      setSubscriptionData([]);
-      activitydata.forEach((name) => {
-        getsubDatabyActivityName(name);
-      });
-    }
-  }, [activitydata]);
+useEffect(() => {
+
+
+
+
+
+
+
+  // if (activitydata.length > 0) {
+    fetchAllData(); // only run when activity names are available
+  // }
+}, []);
+
+
+
+
+
 
   return (
     <div className="flex flex-col gap-4 ">
@@ -237,6 +284,7 @@ function Dashborad() {
           <ChartPieLegend
             datatitle={activitydata}
             statitics={subscriptionData}
+            // loading={loading}
           />
         </div>
       </div>

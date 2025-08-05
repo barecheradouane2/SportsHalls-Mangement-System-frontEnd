@@ -5,11 +5,13 @@ import { AlignJustify } from "lucide-react";
 
 import { Bell } from "lucide-react";
 
-import { useState } from "react";
+import {  useState } from "react";
 
 import { LogOut } from "lucide-react";
 
 import { Globe } from 'lucide-react';
+
+import Cookies from "js-cookie";
 
 
 import {
@@ -39,6 +41,8 @@ function AdminHeader() {
       .post("https://localhost:7259/api/Auth/logout")
       .then((response) => {
          console.log("Logout successful:", response.messsage);
+         localStorage.removeItem("auth");
+
        navigate("/login");
        
         // Optionally, you can clear any user data from your context or state here
@@ -48,6 +52,7 @@ function AdminHeader() {
         console.error("There was an error logging out!", error);
       });
   }
+  
 
  
 
@@ -60,7 +65,7 @@ function AdminHeader() {
           {" "}
           Mr{" "}
           <span className="text-2xl font-bold   text-third-100">
-            {login?.user?.userName ?? "Guest"}
+            {login?.user?.userName ??  JSON.parse(localStorage.getItem("auth")).userName }
 
           </span>
         </h2>

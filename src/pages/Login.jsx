@@ -14,6 +14,7 @@ function Login() {
     try {
       const response = await axios.post("https://localhost:7259/api/Account/login", data, { withCredentials: true });
       login(response.data.user); // Save user in context
+      localStorage.setItem("auth", JSON.stringify(response.data.user));
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);

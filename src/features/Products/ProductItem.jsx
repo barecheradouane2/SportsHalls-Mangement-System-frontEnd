@@ -115,6 +115,7 @@ function ProductItem({ product, handledelete, setproductvalue }) {
 
         <DialogDemo
           ref={addeditref}
+        
           btnName="Add to cart "
           btnIcon="+"
           title={"Add to cart"}

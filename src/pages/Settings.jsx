@@ -172,7 +172,7 @@ const {  register: registerUser,
 
   const onSubmitActivity = async (data) => {
     try {
-      alert("onSubmitActivity called with data: " + JSON.stringify(data));
+     
 
       const formData = new FormData();
       formData.append("Name", data.name);
@@ -229,7 +229,7 @@ const {  register: registerUser,
   const onSubmitOffer = async (data) => {
     try {
       
-      alert("onSubmitOffer called with data: " + JSON.stringify(data));
+     
       let lodeddata = {
         name: data.OffersName,
         durationDays: data.durationDays,
